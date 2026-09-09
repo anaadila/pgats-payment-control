@@ -24,7 +24,7 @@ describe('Mutation - Criar Funcionário', () => {
         token = respostaToken.body.data.login.token
     })
 
-    it.only('Deve criar um funcionário quando preencho os campos obrigatórios de forma válida', async () => {
+    it('Deve criar um funcionário quando preencho os campos obrigatórios de forma válida', async () => {
 
         let cpf = Date.now()
 
@@ -57,7 +57,7 @@ describe('Mutation - Criar Funcionário', () => {
         expect(resposta.body.data.criarFuncionario.id).to.not.be.empty
     })
 
-    it.only('Deve criar um funcionário quando preencho todos os campos de forma válida', async () => {
+    it('Deve criar um funcionário quando preencho todos os campos de forma válida', async () => {
 
         let cpf = Date.now()
 
@@ -93,7 +93,7 @@ describe('Mutation - Criar Funcionário', () => {
         expect(resposta.body.data.criarFuncionario).to.have.property('desligamento')
     })
 
-    it.only('Não deve criar um funcionário quando enviar um salário negativo', async () => {
+    it('Não deve criar um funcionário quando enviar um salário negativo', async () => {
 
         let cpf = Date.now()
 
@@ -125,7 +125,7 @@ describe('Mutation - Criar Funcionário', () => {
         expect(resposta.body.errors[0].message).to.equal('Salário base não pode ser negativo.')
     })
 
-    it.only('Não deve criar um funcionário quando não envio o campo cpf', async () => {
+    it('Não deve criar um funcionário quando não envio o campo cpf', async () => {
         
         const resposta = await request('http://localhost:4000')
             .post('/graphql')
@@ -154,7 +154,7 @@ describe('Mutation - Criar Funcionário', () => {
         expect(resposta.body.errors[0].message).to.include('Field \"cpf\" of required type \"String!\" was not provided.')
     })
 
-    it.only('Não deve criar um funcionário quando envio o campo cpf vazio', async () => {
+    it('Não deve criar um funcionário quando envio o campo cpf vazio', async () => {
 
         const resposta = await request('http://localhost:4000')
             .post('/graphql')
@@ -184,7 +184,7 @@ describe('Mutation - Criar Funcionário', () => {
         expect(resposta.body.errors[0].message).to.equals('CPF, nome, salário base e admissão são obrigatórios.')
     })
 
-    it.only('Não deve criar um funcionário quando data de desligamento é anterior a data de admissão', async () => {
+    it('Não deve criar um funcionário quando data de desligamento é anterior a data de admissão', async () => {
 
         let cpf = Date.now()
 
@@ -218,7 +218,7 @@ describe('Mutation - Criar Funcionário', () => {
         expect(resposta.body.errors[0].message).to.equals('Desligamento não pode ser anterior à admissão.')
     })
 
-    it.only('Não deve criar um funcionário já existente', async () => {
+    it('Não deve criar um funcionário já existente', async () => {
 
         let cpf = Date.now()
 
