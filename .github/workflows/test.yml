@@ -27,7 +27,7 @@ jobs:
         run: npm start &
 
       - name: AGUARDAR A API ESTAR PRONTA
-        run: npx wait-on http://localhost:4000/graphql
+        run: sleep 10
 
       - name: RODAR TESTES
         run: npm test
