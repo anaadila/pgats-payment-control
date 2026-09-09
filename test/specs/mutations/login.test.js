@@ -1,23 +1,13 @@
 const request = require('supertest')
 const { expect } = require('chai')
+const { login, loginTodosCampos } = require('../../helpers/login.js')
+const loginData = require('../../fixtures/login.json')
 
 describe('Mutation - Login', () => {
 
     it('Deve realizar login com sucesso quando informo credenciais válidas', async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `
-                mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                    }
-                }`,
-                variables: {
-                    email: "admin@admin.com",
-                    senha: "123456"
-                }
-            })
+
+        const resposta = await login(loginData.admin)
 
         expect(resposta.status).to.equal(200)
         expect(resposta.body.data.login).to.have.property('token')
@@ -26,26 +16,7 @@ describe('Mutation - Login', () => {
     })
 
     it('Deve fornecer token, email, id, nome e ativo na resposta', async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `
-                mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                        usuario {
-                            email,
-                            id,
-                            nome,
-                            ativo
-                        }
-                    }
-                }`,
-                variables: {
-                    email: "admin@admin.com",
-                    senha: "123456"
-                }
-            })
+        const resposta = await loginTodosCampos(loginData.admin)
 
         expect(resposta.status).to.equal(200)
         expect(resposta.body.data.login).to.have.property('token')
@@ -70,138 +41,49 @@ describe('Mutation - Login', () => {
     })
 
     it('Não deve realizar login quando informo credenciais inválidas', async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `
-                mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                    }
-                }`,
-                variables: {
-                    email: "admin@admin.com",
-                    senha: "senhaInvalida"
-                }
-            })
+        const resposta = await login(loginData.senhaInvalida)
 
         expect(resposta.status).to.equal(200)
         expect(resposta.body.errors[0].message).to.equal('Credenciais inválidas ou usuário inativo.')
     })
 
     it('Não deve realizar login quando informo email inválido', async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `
-                mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                    }
-                }`,
-                variables: {
-                    email: "emailInvalido",
-                    senha: "123456"
-                }
-            })
+        const resposta = await login(loginData.emailInvalido)
 
         expect(resposta.status).to.equal(200)
         expect(resposta.body.errors[0].message).to.equal('Credenciais inválidas ou usuário inativo.')
     })
 
     it('Não deve realizar login quando informo email vazio', async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `
-                mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                    }
-                }`,
-                variables: {
-                    email: "",
-                    senha: "123456"
-                }
-            })
+        const resposta = await login(loginData.emailVazio)
 
         expect(resposta.status).to.equal(200)
         expect(resposta.body.errors[0].message).to.equal('Credenciais inválidas ou usuário inativo.')
     })
 
     it('Não deve realizar login quando informo senha vazia', async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `
-                mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                    }
-                }`,
-                variables: {
-                    email: "admin@admin.com",
-                    senha: ""
-                }
-            })
+        const resposta = await login(loginData.senhaVazia)
 
         expect(resposta.status).to.equal(200)
         expect(resposta.body.errors[0].message).to.equal('Credenciais inválidas ou usuário inativo.')
     })
 
     it('Não deve realizar login quando não envio email', async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `
-                mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                    }
-                }`,
-                variables: {
-                    senha: "123456"
-                }
-            })
+        const resposta = await login(loginData.semEmail)
 
         expect(resposta.status).to.equal(400)
         expect(resposta.body.errors[0].message).to.equal('Variable \"$email\" of required type \"String!\" was not provided.')
     })
 
     it('Não deve realizar login quando não envio senha', async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `
-                mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                    }
-                }`,
-                variables: {
-                    email: "admin@admin.com"
-                }
-            })
+        const resposta = await login(loginData.semSenha)
 
         expect(resposta.status).to.equal(400)
         expect(resposta.body.errors[0].message).to.equal('Variable \"$senha\" of required type \"String!\" was not provided.')
     })
 
     it('Não deve realizar login quando informo credenciais inativas', async () => {
-        const resposta = await request('http://localhost:4000')
-            .post('/graphql')
-            .send({
-                query: `
-                mutation Login($email: String!, $senha: String!) {
-                    login(email: $email, senha: $senha) {
-                        token
-                    }
-                }`,
-                variables: {
-                    email: "inativa@inativa.com",
-                    senha: "123456"
-                }
-            })
+        const resposta = await login(loginData.credencialInativa)
 
         expect(resposta.status).to.equal(200)
         expect(resposta.body.errors[0].message).to.equal('Credenciais inválidas ou usuário inativo.')

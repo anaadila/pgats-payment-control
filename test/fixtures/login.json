@@ -1,0 +1,32 @@
+{
+    "admin": {
+        "email": "admin@admin.com",
+        "senha": "123456"
+    },
+    "senhaInvalida": {
+        "email": "admin@admin.com",
+        "senha": "senhaInvalida"
+    },
+    "emailInvalido": {
+        "email": "emailInvalido",
+        "senha": "123456"
+    },
+    "emailVazio": {
+        "email": "",
+        "senha": "123456"
+    },
+    "senhaVazia": {
+        "email": "admin@admin.com",
+        "senha": ""
+    },
+    "semEmail": {
+        "senha": "123456"
+    },
+    "semSenha": {
+        "email": "admin@admin.com"
+    },
+    "credencialInativa": {
+        "email": "inativa@inativa.com",
+        "senha": "123456"
+    }
+}
