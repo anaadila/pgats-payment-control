@@ -1,4 +1,4 @@
-Name: Private Payment CI
+name: Private Payment CI
 
 on:
   workflow_dispatch:
